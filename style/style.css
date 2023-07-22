@@ -20,6 +20,10 @@ h1, h2, h3, h4, h5, h6, p {
   text-align: center;
   margin-bottom: 40px;
 }
+.header__container {
+  display: flex;
+  justify-content: space-between;
+}
 .header__title {
   color: white;
   width: 150px;
@@ -33,9 +37,12 @@ h1, h2, h3, h4, h5, h6, p {
 .header__title:hover {
   background-color: #c57;
 }
+.header__button {
+  padding: 0 6px;
+}
 
 .main {
-  min-height: calc(100vh - 213px);
+  min-height: calc(100vh - 275px);
 }
 
 .location__title {

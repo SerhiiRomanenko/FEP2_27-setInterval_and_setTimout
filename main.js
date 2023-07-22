@@ -1,4 +1,5 @@
 //-------------------------------ELEMENTS IN DOM-----------------------------------//
+const $button = document.querySelector(".header__button");
 const $hours = document.querySelector("#hours");
 const $minutes = document.querySelector("#minutes");
 const $seconds = document.querySelector("#seconds");
@@ -91,51 +92,74 @@ $month.innerHTML = changeMonthFormat(fullDate.month);
 $year.innerHTML = fullDate.year;
 $week.innerHTML = fullDate.week;
 
-//--------------------------------INTERVAL IN 1 SECOND-----------------------------//
-setInterval(() => {
-  let sound = new Audio("/audio/click.mp3");
-  sound.play(); // play "click.mp3" every second (but there is some troubles which I don't understand =) )
+let timer = true; // if true -> startInterval, if false ->clearInterval
 
-  const now = new Date(); // every sec I create new Date
+let intervalId; // there will store intervalId to clear him
 
-  if (fullTime.hours !== addZero(now.getHours())) {
-    // if hours are different - I change Hours in DOM
-    fullTime.hours = addZero(now.getHours());
-    $hours.innerHTML = fullTime.hours;
+//--------------------------------START TIMER FUNCTION-----------------------------//
+function startInterval() {
+  intervalId = setInterval(() => {
+    let sound = new Audio("/audio/click.mp3");
+    sound.play(); // play "click.mp3" every second (but there is some troubles which I don't understand =) )
+
+    const now = new Date(); // every sec I create new Date
+
+    if (fullTime.hours !== addZero(now.getHours())) {
+      // if hours are different - I change Hours in DOM
+      fullTime.hours = addZero(now.getHours());
+      $hours.innerHTML = fullTime.hours;
+    }
+    if (fullTime.minutes !== addZero(now.getMinutes())) {
+      // if minutes are different - I change Minutes in DOM
+      fullTime.minutes = addZero(now.getMinutes());
+      $minutes.innerHTML = fullTime.minutes;
+    }
+    if (fullTime.seconds !== addZero(now.getSeconds())) {
+      // if seconds are different - I change Seconds in DOM
+      fullTime.seconds = addZero(now.getSeconds());
+      $seconds.innerHTML = fullTime.seconds;
+    }
+    if (fullDate.dayOfTheWeek !== now.getDay()) {
+      // if day of the weak are different - I change Day in DOM
+      fullDate.dayOfTheWeek = now.getDay();
+      $dayOfTheWeek.innerHTML = changeDayFormat(fullDate.dayOfTheWeek);
+    }
+    if (fullDate.date !== addZero(now.getDate())) {
+      // if day are different - I change Day in DOM
+      fullDate.date = addZero(now.getDate());
+      $date.innerHTML = fullDate.date;
+    }
+    if (fullDate.month !== now.getMonth()) {
+      // if month are different - I change Month in DOM
+      fullDate.month = now.getMonth();
+      $month.innerHTML = changeMonthFormat(fullDate.month);
+    }
+    if (fullDate.year !== now.getFullYear()) {
+      // if year are different - I change Year in DOM
+      fullDate.year = now.getFullYear();
+      $year.innerHTML = fullDate.year;
+    }
+    if (fullDate.week !== moment().week()) {
+      // if week are different - I change Week in DOM
+      fullDate.week = moment().week();
+      $week.innerHTML = fullDate.week;
+    }
+  }, 1000); // here I set Interval - 1 second
+}
+
+startInterval(); // start Timer
+
+// BUTTON CLICK WILL STOP TIMER OR START HIM
+$button.addEventListener("click", function (event) {
+  event.preventDefault();
+  if (timer === true) {
+    // if true => timer = false and clearInterval
+    timer = false;
+    return clearInterval(intervalId);
   }
-  if (fullTime.minutes !== addZero(now.getMinutes())) {
-    // if minutes are different - I change Minutes in DOM
-    fullTime.minutes = addZero(now.getMinutes());
-    $minutes.innerHTML = fullTime.minutes;
+  if (timer === false) {
+    // if false => timer = true and startInterval
+    timer = true;
+    return startInterval();
   }
-  if (fullTime.seconds !== addZero(now.getSeconds())) {
-    // if seconds are different - I change Seconds in DOM
-    fullTime.seconds = addZero(now.getSeconds());
-    $seconds.innerHTML = fullTime.seconds;
-  }
-  if (fullDate.dayOfTheWeek !== now.getDay()) {
-    // if day of the weak are different - I change Day in DOM
-    fullDate.dayOfTheWeek = now.getDay();
-    $dayOfTheWeek.innerHTML = changeDayFormat(fullDate.dayOfTheWeek);
-  }
-  if (fullDate.date !== addZero(now.getDate())) {
-    // if day are different - I change Day in DOM
-    fullDate.date = addZero(now.getDate());
-    $date.innerHTML = fullDate.date;
-  }
-  if (fullDate.month !== now.getMonth()) {
-    // if month are different - I change Month in DOM
-    fullDate.month = now.getMonth();
-    $month.innerHTML = changeMonthFormat(fullDate.month);
-  }
-  if (fullDate.year !== now.getFullYear()) {
-    // if year are different - I change Year in DOM
-    fullDate.year = now.getFullYear();
-    $year.innerHTML = fullDate.year;
-  }
-  if (fullDate.week !== moment().week()) {
-    // if week are different - I change Week in DOM
-    fullDate.week = moment().week();
-    $week.innerHTML = fullDate.week;
-  }
-}, 1000); // here I set Interval - 1 second
+});
